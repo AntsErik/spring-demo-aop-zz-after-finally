@@ -3,10 +3,7 @@ package ee.praktika.aopdemo.aspect;
 import java.util.List;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -17,6 +14,14 @@ import ee.praktika.aopdemo.Account;
 @Component
 @Order( 4 )
 public class MyDemoLoggingAspect {
+
+    @After( "execution(* ee.praktika.aopdemo.dao.AccountDAO.findAccounts(..))" )
+    public void afterFinallyFindAccountsAdvice( JoinPoint theJoinPoint ){
+
+        //print out which method are we advising on
+        String method = theJoinPoint.getSignature().toShortString();
+        System.out.println( "\n======>>> Executing @After (finally) on method: " + method );
+    }
 
     @AfterThrowing( pointcut = "execution(* ee.praktika.aopdemo.dao.AccountDAO.findAccounts(..))", throwing = "theExc" )
     public void afterThrowingFindAccountsAdvice( JoinPoint theJoinPoint, Throwable theExc ){
